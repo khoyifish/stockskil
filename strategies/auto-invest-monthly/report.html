@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auto-Invest Strategy — $500–$1000/Month</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2129;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --green: #3fb950;
+      --green-dim: #1a3a22;
+      --yellow: #d29922;
+      --yellow-dim: #3a2e0a;
+      --red: #f85149;
+      --red-dim: #3a1010;
+      --blue: #58a6ff;
+      --blue-dim: #0c1d35;
+      --purple: #bc8cff;
+      --orange: #ffa657;
+      --accent: #1f6feb;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+      padding: 0 0 60px;
+    }
+
+    /* ── HEADER ── */
+    .hero {
+      background: linear-gradient(135deg, #0c1d35 0%, #1a1035 50%, #0d1117 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 24px 40px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--blue-dim);
+      border: 1px solid var(--accent);
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .hero h1 { font-size: clamp(24px, 4vw, 42px); font-weight: 700; letter-spacing: -0.5px; margin-bottom: 12px; }
+    .hero h1 span { color: var(--blue); }
+    .hero p { color: var(--muted); font-size: 16px; max-width: 600px; margin: 0 auto 24px; }
+    .hero-meta { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+    .meta-item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 20px; font-size: 13px; }
+    .meta-item strong { color: var(--blue); display: block; font-size: 18px; }
+
+    /* ── CONTAINER ── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+    /* ── SECTION ── */
+    .section { margin-top: 48px; }
+    .section-header {
+      display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px; margin-bottom: 24px;
+    }
+    .section-header h2 { font-size: 20px; font-weight: 600; }
+    .section-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── ALLOCATION TABLE GRID ── */
+    .alloc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 16px;
+    }
+    .stock-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .stock-card:hover { border-color: var(--accent); }
+    .stock-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    }
+    .card-bullish::before { background: var(--green); }
+    .card-neutral::before { background: var(--yellow); }
+    .card-bearish::before { background: var(--red); }
+
+    .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .card-ticker { font-size: 22px; font-weight: 700; color: var(--text); }
+    .card-name { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .card-score {
+      background: var(--surface2);
+      border-radius: 8px; padding: 6px 10px;
+      text-align: center; min-width: 56px;
+    }
+    .card-score .score-val { font-size: 20px; font-weight: 700; color: var(--green); }
+    .card-score .score-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+    .card-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+    .badge {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.8px;
+      text-transform: uppercase; padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .badge-bullish { background: var(--green-dim); color: var(--green); }
+    .badge-neutral { background: var(--yellow-dim); color: var(--yellow); }
+    .badge-buy { background: #0c2a1a; color: #56d364; }
+    .badge-accumulate { background: var(--yellow-dim); color: var(--yellow); }
+    .badge-high { background: #0c2035; color: var(--blue); }
+    .badge-medium { background: #2a1f08; color: #ffa657; }
+    .badge-moat { background: #1a0c35; color: var(--purple); }
+    .badge-income { background: #1a2510; color: #7ee787; }
+    .badge-hedge { background: #1c1610; color: #d4a017; }
+    .badge-crypto { background: #1a1035; color: #bc8cff; }
+
+    .card-alloc {
+      background: var(--surface2); border-radius: 8px; padding: 12px;
+      margin-bottom: 12px;
+    }
+    .alloc-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+    .alloc-row:last-child { margin-bottom: 0; }
+    .alloc-label { color: var(--muted); }
+    .alloc-val { font-weight: 600; }
+    .alloc-bar-wrap { height: 4px; background: var(--border); border-radius: 2px; margin-top: 8px; }
+    .alloc-bar { height: 100%; border-radius: 2px; background: var(--accent); }
+
+    .card-thesis { font-size: 12px; color: var(--muted); line-height: 1.5; border-top: 1px solid var(--border); padding-top: 10px; margin-top: 4px; }
+    .card-thesis strong { color: var(--text); }
+
+    /* ── CHARTS ROW ── */
+    .charts-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px;
+    }
+    .chart-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 16px; color: var(--muted); }
+    .chart-wrap { position: relative; height: 220px; }
+
+    /* ── MONTHLY TABLE ── */
+    .monthly-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .monthly-table th {
+      background: var(--surface2); color: var(--muted);
+      font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase;
+      padding: 10px 14px; text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .monthly-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); }
+    .monthly-table tr:last-child td { border-bottom: none; font-weight: 600; background: var(--surface2); }
+    .monthly-table tr:hover td { background: var(--surface2); }
+    .ticker-cell { font-weight: 700; font-size: 15px; }
+    .green { color: var(--green); }
+    .yellow { color: var(--yellow); }
+    .muted { color: var(--muted); }
+
+    /* ── SIGNAL BLOCKS ── */
+    .signal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .signal-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 16px;
+    }
+    .signal-ticker { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .signal-row {
+      display: flex; justify-content: space-between;
+      font-size: 12px; padding: 5px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .signal-row:last-child { border-bottom: none; }
+    .signal-key { color: var(--muted); }
+    .signal-val { font-weight: 600; }
+
+    /* ── SCORE BAR ── */
+    .score-bar-row { margin-bottom: 14px; }
+    .score-bar-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; }
+    .score-bar-label span:first-child { color: var(--muted); }
+    .score-bar-label span:last-child { font-weight: 700; }
+    .score-bar-bg { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+    .score-bar-fill { height: 100%; border-radius: 4px; }
+
+    /* ── TIMELINE ── */
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+    .tl-item { display: flex; gap: 16px; padding-bottom: 24px; position: relative; }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-left { display: flex; flex-direction: column; align-items: center; width: 32px; flex-shrink: 0; }
+    .tl-dot {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; flex-shrink: 0;
+    }
+    .tl-line { width: 2px; flex: 1; background: var(--border); margin-top: 4px; }
+    .tl-item:last-child .tl-line { display: none; }
+    .tl-content { flex: 1; padding-top: 4px; }
+    .tl-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+    .tl-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .tl-sub { font-size: 12px; color: var(--blue); margin-top: 4px; }
+
+    /* ── RISK TABLE ── */
+    .risk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+    .risk-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 14px;
+    }
+    .risk-item h4 { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .risk-item p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .risk-low { border-left: 3px solid var(--green); }
+    .risk-med { border-left: 3px solid var(--yellow); }
+    .risk-high { border-left: 3px solid var(--red); }
+
+    /* ── CALLOUT ── */
+    .callout {
+      border-radius: 10px; padding: 16px 20px;
+      font-size: 13px; line-height: 1.7; margin-top: 20px;
+    }
+    .callout-info { background: var(--blue-dim); border: 1px solid var(--accent); color: var(--blue); }
+    .callout-warn { background: var(--yellow-dim); border: 1px solid var(--yellow); color: var(--yellow); }
+    .callout strong { display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ── DISCLAIMER ── */
+    .disclaimer {
+      margin-top: 48px; padding: 20px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; font-size: 11px;
+      color: var(--muted); text-align: center; line-height: 1.6;
+    }
+
+    /* ── PROJECTIONS TABLE ── */
+    .proj-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .proj-table th {
+      background: var(--surface2); color: var(--muted);
+      font-size: 11px; letter-spacing: 0.8px; text-transform: uppercase;
+      padding: 10px 14px; text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .proj-table th:first-child { text-align: left; }
+    .proj-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); text-align: center; }
+    .proj-table td:first-child { text-align: left; font-weight: 600; }
+    .proj-table tr:hover td { background: var(--surface2); }
+
+    @media (max-width: 600px) {
+      .hero { padding: 32px 16px 28px; }
+      .container { padding: 0 12px; }
+      .hero-meta { gap: 12px; }
+      .meta-item { padding: 8px 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-badge">InvestSkill — us-stock-analysis v1.6.0</div>
+  <h1>Balanced Auto-Invest Strategy<br><span>$500 – $1,000 / Month</span></h1>
+  <p>Multi-dimensional DCA strategy for two — blue-chip stalwarts, income ETFs, inflation hedges, and strategic digital assets.</p>
+  <div class="hero-meta">
+    <div class="meta-item"><strong>7</strong>Positions</div>
+    <div class="meta-item"><strong>$750</strong>Mid-point/Month</div>
+    <div class="meta-item"><strong>Moderate-Aggressive</strong>Risk Profile</div>
+    <div class="meta-item"><strong>10+ Years</strong>Time Horizon</div>
+    <div class="meta-item"><strong>May 13, 2026</strong>Analysis Date</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ── SECTION 1: POSITION CARDS ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <h2>Position Analysis — InvestSkill Research Bundle</h2>
+    </div>
+    <div class="alloc-grid">
+
+      <!-- MSFT -->
+      <div class="stock-card card-bullish">
+        <div class="card-top">
+          <div>
+            <div class="card-ticker">MSFT</div>
+            <div class="card-name">Microsoft Corporation</div>
+          </div>
+          <div class="card-score">
+            <div class="score-val">8.5</div>
+            <div class="score-label">/ 10</div>
+          </div>
+        </div>
+        <div class="card-badges">
+          <span class="badge badge-bullish">BULLISH</span>
+          <span class="badge badge-buy">STRONG BUY</span>
+          <span class="badge badge-high">HIGH Confidence</span>
+          <span class="badge badge-moat">Wide Moat</span>
+        </div>
+        <div class="card-alloc">
+          <div class="alloc-row"><span class="alloc-label">Allocation</span><span class="alloc-val">25%</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $500/mo</span><span class="alloc-val green">$125</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $750/mo</span><span class="alloc-val green">$187.50</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $1,000/mo</span><span class="alloc-val green">$250</span></div>
+          <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:25%"></div></div>
+        </div>
+        <div class="card-thesis">
+          <strong>Why MSFT?</strong> Azure cloud #2 globally, 400M+ Office 365 seats generating AI-Copilot upsell revenue, GitHub Copilot monetization, and a 22-year consecutive dividend increase streak. AI is the next platform shift — MSFT is the picks-and-shovels play.<br><br>
+          <strong>Bull:</strong> AI Copilot adds $10–20B incremental revenue by FY2028.<br>
+          <strong>Bear:</strong> ~32x forward P/E leaves limited margin of safety if AI disappoints.
+        </div>
+      </div>
+
+      <!-- WMT -->
+      <div class="stock-card card-bullish">
+        <div class="card-top">
+          <div>
+            <div class="card-ticker">WMT</div>
+            <div class="card-name">Walmart Inc.</div>
+          </div>
+          <div class="card-score">
+            <div class="score-val">7.5</div>
+            <div class="score-label">/ 10</div>
+          </div>
+        </div>
+        <div class="card-badges">
+          <span class="badge badge-bullish">BULLISH</span>
+          <span class="badge badge-buy">BUY</span>
+          <span class="badge badge-high">HIGH Confidence</span>
+          <span class="badge badge-moat">Dividend King</span>
+        </div>
+        <div class="card-alloc">
+          <div class="alloc-row"><span class="alloc-label">Allocation</span><span class="alloc-val">15%</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $500/mo</span><span class="alloc-val green">$75</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $750/mo</span><span class="alloc-val green">$112.50</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $1,000/mo</span><span class="alloc-val green">$150</span></div>
+          <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:15%"></div></div>
+        </div>
+        <div class="card-thesis">
+          <strong>Why WMT?</strong> Dividend King with 51+ consecutive years of increases. Walmart+ subscribers growing, advertising revenue diversifying earnings, e-commerce accelerating. Recession-proof anchor — when budgets tighten, consumers turn to Walmart.<br><br>
+          <strong>Bull:</strong> Walmart+ + advertising = Apple-like services pivot for retail.<br>
+          <strong>Bear:</strong> Valuation premium (~33x P/E) stretched; tariff headwinds possible.
+        </div>
+      </div>
+
+      <!-- QQQI -->
+      <div class="stock-card card-bullish">
+        <div class="card-top">
+          <div>
+            <div class="card-ticker">QQQI</div>
+            <div class="card-name">NEOS Nasdaq-100 High Income ETF</div>
+          </div>
+          <div class="card-score">
+            <div class="score-val">6.5</div>
+            <div class="score-label">/ 10</div>
+          </div>
+        </div>
+        <div class="card-badges">
+          <span class="badge badge-bullish">BULLISH</span>
+          <span class="badge badge-buy">BUY</span>
+          <span class="badge badge-medium">MEDIUM Confidence</span>
+          <span class="badge badge-income">13–16% Yield</span>
+        </div>
+        <div class="card-alloc">
+          <div class="alloc-row"><span class="alloc-label">Allocation</span><span class="alloc-val">15%</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $500/mo</span><span class="alloc-val green">$75</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $750/mo</span><span class="alloc-val green">$112.50</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $1,000/mo</span><span class="alloc-val green">$150</span></div>
+          <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:15%"></div></div>
+        </div>
+        <div class="card-thesis">
+          <strong>Why QQQI?</strong> Sells covered calls on the NASDAQ-100 to generate monthly cash distributions of 13–16% annually. Cash flow engine of the portfolio — monthly distributions can be manually reinvested into MSFT or WMT to turbocharge compounding.<br><br>
+          <strong>Bull:</strong> High monthly income funds reinvestment at market lows.<br>
+          <strong>Bear:</strong> Capped upside vs. QQQ; NAV erosion risk in strong bull markets.
+        </div>
+      </div>
+
+      <!-- IAU -->
+      <div class="stock-card card-bullish">
+        <div class="card-top">
+          <div>
+            <div class="card-ticker">IAU</div>
+            <div class="card-name">iShares Gold Trust (Physical Gold)</div>
+          </div>
+          <div class="card-score">
+            <div class="score-val">7.5</div>
+            <div class="score-label">/ 10</div>
+          </div>
+        </div>
+        <div class="card-badges">
+          <span class="badge badge-bullish">BULLISH</span>
+          <span class="badge badge-buy">BUY</span>
+          <span class="badge badge-high">HIGH Confidence</span>
+          <span class="badge badge-hedge">Inflation Hedge</span>
+        </div>
+        <div class="card-alloc">
+          <div class="alloc-row"><span class="alloc-label">Allocation</span><span class="alloc-val">15%</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $500/mo</span><span class="alloc-val green">$75</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $750/mo</span><span class="alloc-val green">$112.50</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $1,000/mo</span><span class="alloc-val green">$150</span></div>
+          <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:15%"></div></div>
+        </div>
+        <div class="card-thesis">
+          <strong>Why Gold (IAU)?</strong> Record central bank buying, de-dollarization, geopolitical tension, and persistent inflation are structural tailwinds. Gold is portfolio insurance — non-correlated to equities, protects in crisis scenarios. IAU offers lower expense ratio vs. GLD.<br><br>
+          <strong>Bull:</strong> De-dollarization + safe-haven demand drives gold to new highs.<br>
+          <strong>Bear:</strong> Hawkish Fed + rising real yields = opportunity cost risk.
+        </div>
+      </div>
+
+      <!-- IBIT -->
+      <div class="stock-card card-bullish">
+        <div class="card-top">
+          <div>
+            <div class="card-ticker">IBIT</div>
+            <div class="card-name">iShares Bitcoin Trust (BlackRock)</div>
+          </div>
+          <div class="card-score">
+            <div class="score-val">6.0</div>
+            <div class="score-label">/ 10</div>
+          </div>
+        </div>
+        <div class="card-badges">
+          <span class="badge badge-bullish">BULLISH</span>
+          <span class="badge badge-buy">BUY</span>
+          <span class="badge badge-medium">MEDIUM Confidence</span>
+          <span class="badge badge-crypto">Digital Gold</span>
+        </div>
+        <div class="card-alloc">
+          <div class="alloc-row"><span class="alloc-label">Allocation</span><span class="alloc-val">12%</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $500/mo</span><span class="alloc-val green">$60</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $750/mo</span><span class="alloc-val green">$90</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $1,000/mo</span><span class="alloc-val green">$120</span></div>
+          <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:12%"></div></div>
+        </div>
+        <div class="card-thesis">
+          <strong>Why Bitcoin (IBIT)?</strong> Post-halving supply shock (April 2024), institutional ETF adoption (BlackRock), and fixed 21M supply create multi-year structural appreciation potential. IBIT is the safest vehicle — SEC-regulated, most liquid Bitcoin ETF.<br><br>
+          <strong>Bull:</strong> Post-halving + ETF demand drives BTC to new all-time highs.<br>
+          <strong>Bear:</strong> High volatility (50–80% drawdowns historical); no cash flows.
+        </div>
+      </div>
+
+      <!-- UNH -->
+      <div class="stock-card card-neutral">
+        <div class="card-top">
+          <div>
+            <div class="card-ticker">UNH</div>
+            <div class="card-name">UnitedHealth Group Inc.</div>
+          </div>
+          <div class="card-score">
+            <div class="score-val" style="color:var(--yellow)">5.5</div>
+            <div class="score-label">/ 10</div>
+          </div>
+        </div>
+        <div class="card-badges">
+          <span class="badge badge-neutral">NEUTRAL</span>
+          <span class="badge badge-accumulate">ACCUMULATE</span>
+          <span class="badge badge-medium">MEDIUM Confidence</span>
+          <span class="badge badge-moat">Wide Moat</span>
+        </div>
+        <div class="card-alloc">
+          <div class="alloc-row"><span class="alloc-label">Allocation</span><span class="alloc-val">10%</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $500/mo</span><span class="alloc-val yellow">$50</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $750/mo</span><span class="alloc-val yellow">$75</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $1,000/mo</span><span class="alloc-val yellow">$100</span></div>
+          <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:10%; background:var(--yellow)"></div></div>
+        </div>
+        <div class="card-thesis">
+          <strong>Why UNH (with caution)?</strong> Largest US health insurer with a wide moat via Optum integration. Current headwinds (DOJ investigation, Medicare Advantage pressure, CEO transition) have created a depressed valuation — potential recovery play for patient DCA buyers.<br><br>
+          <strong>Bull:</strong> DOJ resolves favorably + MA reimbursements stabilize → significant re-rating.<br>
+          <strong>Bear:</strong> Regulatory action, breakup risk, sustained earnings pressure.
+        </div>
+      </div>
+
+      <!-- SLV -->
+      <div class="stock-card card-bullish">
+        <div class="card-top">
+          <div>
+            <div class="card-ticker">SLV</div>
+            <div class="card-name">iShares Silver Trust</div>
+          </div>
+          <div class="card-score">
+            <div class="score-val">7.0</div>
+            <div class="score-label">/ 10</div>
+          </div>
+        </div>
+        <div class="card-badges">
+          <span class="badge badge-bullish">BULLISH</span>
+          <span class="badge badge-buy">BUY</span>
+          <span class="badge badge-medium">MEDIUM Confidence</span>
+          <span class="badge badge-hedge">Industrial + Monetary</span>
+        </div>
+        <div class="card-alloc">
+          <div class="alloc-row"><span class="alloc-label">Allocation</span><span class="alloc-val">8%</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $500/mo</span><span class="alloc-val green">$40</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $750/mo</span><span class="alloc-val green">$60</span></div>
+          <div class="alloc-row"><span class="alloc-label">At $1,000/mo</span><span class="alloc-val green">$80</span></div>
+          <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:8%"></div></div>
+        </div>
+        <div class="card-thesis">
+          <strong>Why Silver (SLV)?</strong> Uniquely positioned as both an industrial metal (solar panels, EVs, 5G) and a monetary hedge. Clean energy buildout is a structural silver demand driver. Gold/Silver ratio is historically elevated — mean reversion historically gives silver 30–50% outperformance vs. gold.<br><br>
+          <strong>Bull:</strong> Solar demand + monetary demand = dual-engine growth.<br>
+          <strong>Bear:</strong> More volatile than gold; recession = industrial demand drop.
+        </div>
+      </div>
+
+    </div><!-- /alloc-grid -->
+  </div>
+
+  <!-- ── SECTION 2: CHARTS ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <h2>Portfolio Allocation Visualized</h2>
+    </div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <h3>Allocation by Position (%)</h3>
+        <div class="chart-wrap">
+          <canvas id="allocChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Allocation by Asset Class</h3>
+        <div class="chart-wrap">
+          <canvas id="assetClassChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Composite Scores (0–10)</h3>
+        <div class="chart-wrap">
+          <canvas id="scoreChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 3: MONTHLY DOLLAR TABLE ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <h2>Monthly Auto-Invest Dollar Amounts</h2>
+    </div>
+    <div style="overflow-x:auto; background:var(--surface); border:1px solid var(--border); border-radius:12px;">
+      <table class="monthly-table">
+        <thead>
+          <tr>
+            <th>Ticker</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Alloc %</th>
+            <th>$500 / mo</th>
+            <th>$750 / mo</th>
+            <th>$1,000 / mo</th>
+            <th>Signal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="ticker-cell">MSFT</td>
+            <td>Microsoft</td>
+            <td>Core Blue Chip</td>
+            <td>25%</td>
+            <td class="green">$125.00</td>
+            <td class="green">$187.50</td>
+            <td class="green">$250.00</td>
+            <td><span class="badge badge-bullish">BULLISH</span></td>
+          </tr>
+          <tr>
+            <td class="ticker-cell">WMT</td>
+            <td>Walmart</td>
+            <td>Defensive Core</td>
+            <td>15%</td>
+            <td class="green">$75.00</td>
+            <td class="green">$112.50</td>
+            <td class="green">$150.00</td>
+            <td><span class="badge badge-bullish">BULLISH</span></td>
+          </tr>
+          <tr>
+            <td class="ticker-cell">IAU</td>
+            <td>Gold ETF</td>
+            <td>Inflation Hedge</td>
+            <td>15%</td>
+            <td class="green">$75.00</td>
+            <td class="green">$112.50</td>
+            <td class="green">$150.00</td>
+            <td><span class="badge badge-bullish">BULLISH</span></td>
+          </tr>
+          <tr>
+            <td class="ticker-cell">QQQI</td>
+            <td>NEOS Income ETF</td>
+            <td>Income Generator</td>
+            <td>15%</td>
+            <td class="green">$75.00</td>
+            <td class="green">$112.50</td>
+            <td class="green">$150.00</td>
+            <td><span class="badge badge-bullish">BULLISH</span></td>
+          </tr>
+          <tr>
+            <td class="ticker-cell">IBIT</td>
+            <td>Bitcoin ETF</td>
+            <td>Trending / Digital</td>
+            <td>12%</td>
+            <td class="green">$60.00</td>
+            <td class="green">$90.00</td>
+            <td class="green">$120.00</td>
+            <td><span class="badge badge-bullish">BULLISH</span></td>
+          </tr>
+          <tr>
+            <td class="ticker-cell">UNH</td>
+            <td>UnitedHealth</td>
+            <td>Healthcare Recovery</td>
+            <td>10%</td>
+            <td class="yellow">$50.00</td>
+            <td class="yellow">$75.00</td>
+            <td class="yellow">$100.00</td>
+            <td><span class="badge badge-neutral">NEUTRAL</span></td>
+          </tr>
+          <tr>
+            <td class="ticker-cell">SLV</td>
+            <td>Silver ETF</td>
+            <td>Inflation Hedge</td>
+            <td>8%</td>
+            <td class="green">$40.00</td>
+            <td class="green">$60.00</td>
+            <td class="green">$80.00</td>
+            <td><span class="badge badge-bullish">BULLISH</span></td>
+          </tr>
+          <tr>
+            <td class="ticker-cell muted">TOTAL</td>
+            <td class="muted">7 positions</td>
+            <td class="muted">—</td>
+            <td>100%</td>
+            <td class="green">$500.00</td>
+            <td class="green">$750.00</td>
+            <td class="green">$1,000.00</td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── SECTION 4: COMPOSITE SCORES ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <h2>InvestSkill Composite Scores</h2>
+    </div>
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px;">
+      <div class="score-bar-row">
+        <div class="score-bar-label"><span>MSFT — Microsoft</span><span style="color:var(--green)">8.5 / 10 — Strong Buy</span></div>
+        <div class="score-bar-bg"><div class="score-bar-fill" style="width:85%; background:var(--green)"></div></div>
+      </div>
+      <div class="score-bar-row">
+        <div class="score-bar-label"><span>WMT — Walmart</span><span style="color:var(--green)">7.5 / 10 — Buy</span></div>
+        <div class="score-bar-bg"><div class="score-bar-fill" style="width:75%; background:var(--green)"></div></div>
+      </div>
+      <div class="score-bar-row">
+        <div class="score-bar-label"><span>IAU — Gold</span><span style="color:var(--green)">7.5 / 10 — Buy</span></div>
+        <div class="score-bar-bg"><div class="score-bar-fill" style="width:75%; background:var(--green)"></div></div>
+      </div>
+      <div class="score-bar-row">
+        <div class="score-bar-label"><span>SLV — Silver</span><span style="color:var(--green)">7.0 / 10 — Buy</span></div>
+        <div class="score-bar-bg"><div class="score-bar-fill" style="width:70%; background:#56d364)"></div></div>
+      </div>
+      <div class="score-bar-row">
+        <div class="score-bar-label"><span>QQQI — Income ETF</span><span style="color:var(--green)">6.5 / 10 — Buy</span></div>
+        <div class="score-bar-bg"><div class="score-bar-fill" style="width:65%; background:#4caf50"></div></div>
+      </div>
+      <div class="score-bar-row">
+        <div class="score-bar-label"><span>IBIT — Bitcoin</span><span style="color:var(--orange)">6.0 / 10 — Buy</span></div>
+        <div class="score-bar-bg"><div class="score-bar-fill" style="width:60%; background:var(--orange)"></div></div>
+      </div>
+      <div class="score-bar-row" style="margin-bottom:0">
+        <div class="score-bar-label"><span>UNH — UnitedHealth</span><span style="color:var(--yellow)">5.5 / 10 — Accumulate</span></div>
+        <div class="score-bar-bg"><div class="score-bar-fill" style="width:55%; background:var(--yellow)"></div></div>
+      </div>
+    </div>
+
+    <div class="callout callout-info" style="margin-top:16px;">
+      <strong>Score Interpretation (InvestSkill Scale)</strong>
+      8.0–10.0 = Strong Buy &nbsp;|&nbsp; 6.5–7.9 = Buy &nbsp;|&nbsp; 5.0–6.4 = Hold / Accumulate on Weakness &nbsp;|&nbsp; 3.5–4.9 = Reduce &nbsp;|&nbsp; 0.0–3.4 = Sell / Avoid
+    </div>
+  </div>
+
+  <!-- ── SECTION 5: SIGNAL BLOCKS ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <h2>Standard Signal Output — All Positions</h2>
+    </div>
+    <div class="signal-grid">
+      <div class="signal-card">
+        <div class="signal-ticker" style="color:var(--green)">MSFT</div>
+        <div class="signal-row"><span class="signal-key">Signal</span><span class="signal-val" style="color:var(--green)">BULLISH</span></div>
+        <div class="signal-row"><span class="signal-key">Confidence</span><span class="signal-val">HIGH</span></div>
+        <div class="signal-row"><span class="signal-key">Horizon</span><span class="signal-val">LONG-TERM</span></div>
+        <div class="signal-row"><span class="signal-key">Score</span><span class="signal-val">8.5 / 10</span></div>
+        <div class="signal-row"><span class="signal-key">Action</span><span class="signal-val">BUY</span></div>
+        <div class="signal-row"><span class="signal-key">Conviction</span><span class="signal-val">STRONG</span></div>
+        <div class="signal-row"><span class="signal-key">DRIP</span><span class="signal-val">ENABLED</span></div>
+      </div>
+      <div class="signal-card">
+        <div class="signal-ticker" style="color:var(--green)">WMT</div>
+        <div class="signal-row"><span class="signal-key">Signal</span><span class="signal-val" style="color:var(--green)">BULLISH</span></div>
+        <div class="signal-row"><span class="signal-key">Confidence</span><span class="signal-val">HIGH</span></div>
+        <div class="signal-row"><span class="signal-key">Horizon</span><span class="signal-val">LONG-TERM</span></div>
+        <div class="signal-row"><span class="signal-key">Score</span><span class="signal-val">7.5 / 10</span></div>
+        <div class="signal-row"><span class="signal-key">Action</span><span class="signal-val">BUY</span></div>
+        <div class="signal-row"><span class="signal-key">Conviction</span><span class="signal-val">STRONG</span></div>
+        <div class="signal-row"><span class="signal-key">DRIP</span><span class="signal-val">ENABLED</span></div>
+      </div>
+      <div class="signal-card">
+        <div class="signal-ticker" style="color:var(--green)">IAU</div>
+        <div class="signal-row"><span class="signal-key">Signal</span><span class="signal-val" style="color:var(--green)">BULLISH</span></div>
+        <div class="signal-row"><span class="signal-key">Confidence</span><span class="signal-val">HIGH</span></div>
+        <div class="signal-row"><span class="signal-key">Horizon</span><span class="signal-val">LONG-TERM</span></div>
+        <div class="signal-row"><span class="signal-key">Score</span><span class="signal-val">7.5 / 10</span></div>
+        <div class="signal-row"><span class="signal-key">Action</span><span class="signal-val">BUY</span></div>
+        <div class="signal-row"><span class="signal-key">Conviction</span><span class="signal-val">STRONG</span></div>
+        <div class="signal-row"><span class="signal-key">DRIP</span><span class="signal-val">N/A</span></div>
+      </div>
+      <div class="signal-card">
+        <div class="signal-ticker" style="color:var(--green)">QQQI</div>
+        <div class="signal-row"><span class="signal-key">Signal</span><span class="signal-val" style="color:var(--green)">BULLISH</span></div>
+        <div class="signal-row"><span class="signal-key">Confidence</span><span class="signal-val">MEDIUM</span></div>
+        <div class="signal-row"><span class="signal-key">Horizon</span><span class="signal-val">MEDIUM-TERM</span></div>
+        <div class="signal-row"><span class="signal-key">Score</span><span class="signal-val">6.5 / 10</span></div>
+        <div class="signal-row"><span class="signal-key">Action</span><span class="signal-val">BUY</span></div>
+        <div class="signal-row"><span class="signal-key">Conviction</span><span class="signal-val">MODERATE</span></div>
+        <div class="signal-row"><span class="signal-key">DRIP</span><span class="signal-val" style="color:var(--yellow)">MANUAL REINVEST</span></div>
+      </div>
+      <div class="signal-card">
+        <div class="signal-ticker" style="color:var(--orange)">IBIT</div>
+        <div class="signal-row"><span class="signal-key">Signal</span><span class="signal-val" style="color:var(--green)">BULLISH</span></div>
+        <div class="signal-row"><span class="signal-key">Confidence</span><span class="signal-val">MEDIUM</span></div>
+        <div class="signal-row"><span class="signal-key">Horizon</span><span class="signal-val">LONG-TERM</span></div>
+        <div class="signal-row"><span class="signal-key">Score</span><span class="signal-val">6.0 / 10</span></div>
+        <div class="signal-row"><span class="signal-key">Action</span><span class="signal-val">BUY</span></div>
+        <div class="signal-row"><span class="signal-key">Conviction</span><span class="signal-val">MODERATE</span></div>
+        <div class="signal-row"><span class="signal-key">Max Alloc</span><span class="signal-val" style="color:var(--orange)">15% cap</span></div>
+      </div>
+      <div class="signal-card">
+        <div class="signal-ticker" style="color:var(--yellow)">UNH</div>
+        <div class="signal-row"><span class="signal-key">Signal</span><span class="signal-val" style="color:var(--yellow)">NEUTRAL</span></div>
+        <div class="signal-row"><span class="signal-key">Confidence</span><span class="signal-val">MEDIUM</span></div>
+        <div class="signal-row"><span class="signal-key">Horizon</span><span class="signal-val">MEDIUM-TERM</span></div>
+        <div class="signal-row"><span class="signal-key">Score</span><span class="signal-val">5.5 / 10</span></div>
+        <div class="signal-row"><span class="signal-key">Action</span><span class="signal-val" style="color:var(--yellow)">ACCUMULATE</span></div>
+        <div class="signal-row"><span class="signal-key">Conviction</span><span class="signal-val">MODERATE</span></div>
+        <div class="signal-row"><span class="signal-key">Risk Flag</span><span class="signal-val" style="color:var(--red)">DOJ / Regulatory</span></div>
+      </div>
+      <div class="signal-card">
+        <div class="signal-ticker" style="color:var(--green)">SLV</div>
+        <div class="signal-row"><span class="signal-key">Signal</span><span class="signal-val" style="color:var(--green)">BULLISH</span></div>
+        <div class="signal-row"><span class="signal-key">Confidence</span><span class="signal-val">MEDIUM</span></div>
+        <div class="signal-row"><span class="signal-key">Horizon</span><span class="signal-val">LONG-TERM</span></div>
+        <div class="signal-row"><span class="signal-key">Score</span><span class="signal-val">7.0 / 10</span></div>
+        <div class="signal-row"><span class="signal-key">Action</span><span class="signal-val">BUY</span></div>
+        <div class="signal-row"><span class="signal-key">Conviction</span><span class="signal-val">MODERATE</span></div>
+        <div class="signal-row"><span class="signal-key">Catalyst</span><span class="signal-val">Solar + EVs</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 6: HOW TO AUTOMATE ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <h2>How to Set Up Auto-Investing</h2>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot">1</div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-title">Choose a Broker</div>
+          <div class="tl-body">
+            <strong>M1 Finance</strong> — Best option. Create a "Pie" with 7 slices at the exact percentages above. Set recurring transfers on the 1st or 15th. Auto-invests automatically with fractional shares.<br><br>
+            <strong>Fidelity</strong> — Use "Automatic Investments" for each position. Supports fractional shares on stocks and ETFs.<br><br>
+            <strong>Schwab</strong> — "Stock Slices" for fractional shares; set up recurring buys manually per position.
+          </div>
+          <div class="tl-sub">Tip: M1 Finance is the most hands-off option for this exact strategy.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot">2</div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-title">Set Up the Recurring Transfer</div>
+          <div class="tl-body">Link your bank account and schedule a recurring ACH transfer of $500–$1,000 on the 1st of each month. Starting on a fixed date builds discipline and removes emotion from the process.</div>
+          <div class="tl-sub">DCA principle: Invest the same amount regardless of market conditions — you buy more shares when prices are low automatically.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot">3</div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-title">Enable DRIP for MSFT and WMT</div>
+          <div class="tl-body">Enable dividend reinvestment (DRIP) for Microsoft and Walmart. Their dividends will automatically buy more fractional shares, compounding your ownership over time. MSFT yields ~0.75%; WMT ~1% — small now, significant in 10 years.</div>
+          <div class="tl-sub">Over 20 years, DRIP can add 20–40% to total return vs. taking dividends as cash.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot">4</div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-title">Manually Reinvest QQQI Distributions</div>
+          <div class="tl-body">QQQI pays monthly distributions (~13–16% annually). Do NOT enable DRIP for QQQI — instead, once a month, take those distributions and manually buy more MSFT or WMT. This redirects high-yield income into your strongest compounders.</div>
+          <div class="tl-sub">At $750/mo into QQQI, expect ~$8–10/month in distributions to reinvest.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot">5</div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-title">Quarterly Portfolio Review</div>
+          <div class="tl-body">Every quarter, run <code>/portfolio-review</code> with your current holdings to check for allocation drift. If any position is more than ±5% off target, use new monthly contributions (not selling) to rebalance. Monitor UNH specifically for DOJ/regulatory news.</div>
+          <div class="tl-sub">Use the InvestSkill plugin's /portfolio-review skill for analysis.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-left"><div class="tl-dot">6</div><div class="tl-line"></div></div>
+        <div class="tl-content">
+          <div class="tl-title">Annual Strategy Review (Each January)</div>
+          <div class="tl-body">Once a year: reassess UNH (increase to 15% if regulatory overhang clears), review Bitcoin allocation (cap at 15% max), assess macro environment for gold/silver positioning. Consider adding new positions only if composite score ≥ 7.0.</div>
+          <div class="tl-sub">Run /research-bundle on any new candidate before adding to the portfolio.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 7: 10-YEAR PROJECTION ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <h2>10-Year Growth Projection (Illustrative)</h2>
+    </div>
+    <div class="callout callout-warn">
+      <strong>Important</strong>
+      These projections use assumed blended annual returns and are illustrative only. Actual returns will vary significantly. Past performance does not guarantee future results.
+    </div>
+    <div style="margin-top:20px; overflow-x:auto; background:var(--surface); border:1px solid var(--border); border-radius:12px;">
+      <table class="proj-table">
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>$500/mo Contributed</th>
+            <th>$500/mo Value (8% blend)</th>
+            <th>$750/mo Contributed</th>
+            <th>$750/mo Value (8% blend)</th>
+            <th>$1,000/mo Contributed</th>
+            <th>$1,000/mo Value (8% blend)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Year 1</td><td>$6,000</td><td>$6,240</td><td>$9,000</td><td>$9,360</td><td>$12,000</td><td>$12,480</td></tr>
+          <tr><td>Year 2</td><td>$12,000</td><td>$13,179</td><td>$18,000</td><td>$19,769</td><td>$24,000</td><td>$26,358</td></tr>
+          <tr><td>Year 3</td><td>$18,000</td><td>$20,953</td><td>$27,000</td><td>$31,430</td><td>$36,000</td><td>$41,906</td></tr>
+          <tr><td>Year 5</td><td>$30,000</td><td>$39,507</td><td>$45,000</td><td>$59,261</td><td>$60,000</td><td>$79,015</td></tr>
+          <tr><td>Year 7</td><td>$42,000</td><td>$63,785</td><td>$63,000</td><td>$95,677</td><td>$84,000</td><td>$127,569</td></tr>
+          <tr><td>Year 10</td><td>$60,000</td><td>$110,226</td><td>$90,000</td><td>$165,340</td><td>$120,000</td><td>$220,452</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:20px; background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px;">
+      <h3 style="font-size:14px; margin-bottom:16px; color:var(--muted)">Projected Portfolio Value Over 10 Years</h3>
+      <div style="height:280px;"><canvas id="growthChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 8: RISK ANALYSIS ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <h2>Risk Assessment — Portfolio Level</h2>
+    </div>
+    <div class="risk-grid">
+      <div class="risk-item risk-low">
+        <h4>Low Risk — WMT + Gold (30%)</h4>
+        <p>Walmart is recession-proof consumer staples. Gold is a safe-haven non-correlated to equities. Together they provide portfolio ballast in market downturns. Expected drawdown in a 30% market crash: 10–15%.</p>
+      </div>
+      <div class="risk-item risk-low">
+        <h4>Moderate Risk — MSFT + QQQI + Silver (48%)</h4>
+        <p>Microsoft has a wide moat and predictable revenues but carries tech sector correlation. QQQI has capped upside. Silver is more volatile than gold. Expected drawdown in a 30% market crash: 20–25%.</p>
+      </div>
+      <div class="risk-item risk-med">
+        <h4>Higher Risk — Bitcoin + UNH (22%)</h4>
+        <p>Bitcoin can fall 50–80% in bear markets. UNH faces regulatory overhang. Combined exposure is capped at 22% to limit portfolio damage. Even in a severe scenario, max damage to total portfolio is ~10–15%.</p>
+      </div>
+      <div class="risk-item risk-low">
+        <h4>Concentration Risk</h4>
+        <p>MSFT at 25% is the largest single holding. This is appropriate given its wide moat and high conviction, but should be reduced to 20% if it grows above 30% of total portfolio via appreciation.</p>
+      </div>
+      <div class="risk-item risk-med">
+        <h4>UNH Specific Risk</h4>
+        <p>DOJ investigation outcome is binary: resolution = significant upside. Adverse ruling or forced breakup = sustained downside. Monitor quarterly; reduce to 5% if thesis deteriorates further.</p>
+      </div>
+      <div class="risk-item risk-low">
+        <h4>Inflation Scenario</h4>
+        <p>23% in gold/silver + 12% Bitcoin = 35% hard-asset exposure. This portfolio is well-positioned for inflationary environments. Real assets protect purchasing power when paper assets erode.</p>
+      </div>
+      <div class="risk-item risk-low">
+        <h4>Recession Scenario</h4>
+        <p>WMT (defensive), Gold (safe haven), MSFT (cloud contracts are sticky) provide resilience. QQQI income generation continues. Only high-risk positions (IBIT, UNH) face significant pressure.</p>
+      </div>
+      <div class="risk-item risk-med">
+        <h4>Maximum Drawdown Estimate</h4>
+        <p>In a severe bear market (-40% equities), estimated portfolio drawdown: 25–30%. Recovery time at continued $750/mo DCA: 18–30 months. DCA accelerates recovery by buying more shares at lower prices.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SECTION 9: REBALANCING ── -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <h2>Rebalancing &amp; Monitoring Rules</h2>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px;">
+        <h3 style="font-size:14px; margin-bottom:12px; color:var(--blue)">Rebalancing Triggers</h3>
+        <ul style="font-size:13px; color:var(--muted); line-height:1.8; padding-left:16px;">
+          <li>Any position drifts ±5% from target weight</li>
+          <li>Bitcoin exceeds 15% of portfolio</li>
+          <li>MSFT exceeds 30% of portfolio</li>
+          <li>Single asset class > 60% of portfolio</li>
+          <li>Annual review each January</li>
+        </ul>
+      </div>
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px;">
+        <h3 style="font-size:14px; margin-bottom:12px; color:var(--green)">Rebalancing Method</h3>
+        <ul style="font-size:13px; color:var(--muted); line-height:1.8; padding-left:16px;">
+          <li>Buy underweight positions with new contributions first</li>
+          <li>Avoid selling (triggers taxable events)</li>
+          <li>Use QQQI distributions to buy underweight positions</li>
+          <li>Only sell if thesis is broken, not just price-based</li>
+          <li>Tax-loss harvest in November/December if applicable</li>
+        </ul>
+      </div>
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px;">
+        <h3 style="font-size:14px; margin-bottom:12px; color:var(--yellow)">UNH Upgrade Conditions</h3>
+        <ul style="font-size:13px; color:var(--muted); line-height:1.8; padding-left:16px;">
+          <li>DOJ investigation resolved favorably</li>
+          <li>Medicare Advantage reimbursement stabilizes</li>
+          <li>Earnings guidance resumed with confidence</li>
+          <li>→ Increase UNH to 15% at that point</li>
+        </ul>
+      </div>
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px;">
+        <h3 style="font-size:14px; margin-bottom:12px; color:var(--red)">Exit / Thesis Break Conditions</h3>
+        <ul style="font-size:13px; color:var(--muted); line-height:1.8; padding-left:16px;">
+          <li>MSFT: Azure loses market share persistently</li>
+          <li>WMT: Dividend cut occurs</li>
+          <li>QQQI: NAV falls > 20% over 12M with no recovery</li>
+          <li>IBIT: Regulatory ban or 90%+ BTC collapse</li>
+          <li>UNH: Forced breakup or MA business banned</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    <strong>Educational Disclaimer</strong><br>
+    This analysis and strategy is for educational purposes only and does not constitute financial advice. All investments involve risk, including possible loss of principal. Past performance does not guarantee future results. The InvestSkill analysis methodology is a framework for organizing research — it is not a guarantee of investment outcomes. Consult a licensed financial advisor, CPA, or investment professional before making any investment decisions. This strategy was generated using the InvestSkill us-stock-analysis plugin (v1.6.0) on May 13, 2026.
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ── ALLOCATION DONUT CHART ──
+new Chart(document.getElementById('allocChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['MSFT', 'WMT', 'IAU (Gold)', 'QQQI', 'IBIT (BTC)', 'UNH', 'SLV (Silver)'],
+    datasets: [{
+      data: [25, 15, 15, 15, 12, 10, 8],
+      backgroundColor: ['#58a6ff','#3fb950','#ffd700','#7ee787','#bc8cff','#ffa657','#c0c0c0'],
+      borderColor: '#161b22',
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { color: '#8b949e', font: { size: 11 }, padding: 10, boxWidth: 12 } }
+    }
+  }
+});
+
+// ── ASSET CLASS DONUT ──
+new Chart(document.getElementById('assetClassChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['US Equities (MSFT+WMT+UNH)', 'Equity ETF / QQQI', 'Precious Metals (Gold+Silver)', 'Digital Assets (BTC)'],
+    datasets: [{
+      data: [50, 15, 23, 12],
+      backgroundColor: ['#58a6ff','#7ee787','#ffd700','#bc8cff'],
+      borderColor: '#161b22',
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { color: '#8b949e', font: { size: 11 }, padding: 10, boxWidth: 12 } }
+    }
+  }
+});
+
+// ── COMPOSITE SCORE BAR CHART ──
+new Chart(document.getElementById('scoreChart'), {
+  type: 'bar',
+  data: {
+    labels: ['MSFT','WMT','IAU','SLV','QQQI','IBIT','UNH'],
+    datasets: [{
+      label: 'Composite Score',
+      data: [8.5, 7.5, 7.5, 7.0, 6.5, 6.0, 5.5],
+      backgroundColor: ['#3fb950','#3fb950','#3fb950','#56d364','#4caf50','#ffa657','#d29922'],
+      borderRadius: 6,
+      borderSkipped: false
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    indexAxis: 'y',
+    scales: {
+      x: {
+        min: 0, max: 10,
+        grid: { color: '#30363d' },
+        ticks: { color: '#8b949e' }
+      },
+      y: { grid: { display: false }, ticks: { color: '#e6edf3', font: { weight: '600' } } }
+    },
+    plugins: { legend: { display: false } }
+  }
+});
+
+// ── GROWTH PROJECTION LINE CHART ──
+new Chart(document.getElementById('growthChart'), {
+  type: 'line',
+  data: {
+    labels: ['Y0','Y1','Y2','Y3','Y4','Y5','Y6','Y7','Y8','Y9','Y10'],
+    datasets: [
+      {
+        label: '$500/mo Value',
+        data: [0, 6240, 13179, 20953, 29626, 39507, 50794, 63785, 78834, 96253, 110226],
+        borderColor: '#58a6ff', backgroundColor: 'rgba(88,166,255,0.08)',
+        tension: 0.4, fill: true, pointRadius: 3
+      },
+      {
+        label: '$750/mo Value',
+        data: [0, 9360, 19769, 31430, 44439, 59261, 76191, 95677, 118251, 144380, 165340],
+        borderColor: '#3fb950', backgroundColor: 'rgba(63,185,80,0.08)',
+        tension: 0.4, fill: true, pointRadius: 3
+      },
+      {
+        label: '$1,000/mo Value',
+        data: [0, 12480, 26358, 41906, 59252, 79015, 101588, 127569, 157668, 192507, 220452],
+        borderColor: '#bc8cff', backgroundColor: 'rgba(188,140,255,0.08)',
+        tension: 0.4, fill: true, pointRadius: 3
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: {
+      x: { grid: { color: '#30363d' }, ticks: { color: '#8b949e' } },
+      y: {
+        grid: { color: '#30363d' }, ticks: { color: '#8b949e',
+          callback: v => '$' + (v/1000).toFixed(0) + 'k'
+        }
+      }
+    },
+    plugins: {
+      legend: { labels: { color: '#8b949e', font: { size: 11 } } },
+      tooltip: { callbacks: { label: ctx => ' $' + ctx.parsed.y.toLocaleString() } }
+    }
+  }
+});
+</script>
+</body>
+</html>
