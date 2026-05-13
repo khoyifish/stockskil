@@ -1,10 +1,10 @@
 {
   "strategy": {
-    "name": "Balanced Auto-Invest Strategy",
-    "version": "1.0.0",
+    "name": "Balanced Auto-Invest Strategy — Expanded Universe",
+    "version": "2.0.0",
     "created": "2026-05-13",
     "methodology": "InvestSkill Multi-Dimensional Analysis (us-stock-analysis v1.6.0)",
-    "description": "Monthly dollar-cost averaging strategy mixing blue-chip stalwarts, income ETFs, inflation hedges, and trending assets for a couple investing $500–$1000/month.",
+    "description": "Monthly dollar-cost averaging across 13 positions spanning blue-chip tech, AI infrastructure, defensive consumer, income ETFs, dividend growth, healthcare innovation, inflation hedges, and digital assets. Built for a couple investing $500–$1,000/month with a 10+ year horizon.",
     "investment_range": {
       "min_monthly": 500,
       "mid_monthly": 750,
@@ -12,15 +12,50 @@
       "currency": "USD"
     },
     "objectives": [
-      "Long-term capital appreciation",
-      "Inflation protection via gold/silver/Bitcoin",
-      "Monthly income generation via QQQI",
-      "Defensive stability via blue-chip holdings",
-      "Diversification across sectors and asset classes"
+      "Long-term capital appreciation via blue-chip compounders",
+      "AI/technology growth exposure through multiple vectors",
+      "Monthly income generation via QQQI + SCHD dividends",
+      "Inflation and dollar hedge via gold, silver, and Bitcoin",
+      "Defensive ballast via consumer staples (WMT, COST)",
+      "Healthcare innovation via LLY and UNH",
+      "Broad diversification across sectors and asset classes"
     ],
     "risk_profile": "Moderate-Aggressive",
     "time_horizon": "10+ years",
     "rebalance_frequency": "Quarterly"
+  },
+  "candidate_universe_evaluated": {
+    "considered": [
+      "MSFT", "NVDA", "AAPL", "AMZN", "GOOGL", "META", "TSLA", "TSM",
+      "WMT", "COST", "TGT", "HD",
+      "LLY", "UNH", "JNJ", "ABBV", "PFE",
+      "JPM", "V", "MA", "BRK.B",
+      "QQQI", "JEPI", "SCHD", "VYM", "QQQ", "VOO",
+      "IAU", "GLD", "SLV", "GDX",
+      "IBIT", "FBTC",
+      "O", "STAG"
+    ],
+    "selected": ["MSFT","NVDA","AAPL","AMZN","WMT","QQQI","IAU","IBIT","LLY","SCHD","COST","UNH","SLV"],
+    "excluded_with_reason": {
+      "GOOGL": "Strong fundamentals but MSFT + AMZN already cover cloud/AI; avoids redundancy",
+      "META": "Excellent AI ad business but high regulatory risk; watchlist for future addition",
+      "TSLA": "High volatility, inconsistent earnings; below 6.0/10 threshold",
+      "TSM": "Geopolitical Taiwan risk; NVDA captures chip demand more safely",
+      "TGT": "Losing market share to WMT/AMZN; below threshold",
+      "JNJ": "LLY and UNH provide better healthcare risk/reward; JNJ growth too slow",
+      "ABBV": "Humira patent cliff overhang; watchlist when Skyrizi/Rinvoq scaling is clearer",
+      "PFE": "Post-COVID revenue collapse, pipeline uncertain; avoid",
+      "JPM": "Strong bank but financials sector already implicit via SCHD",
+      "V": "Excellent moat; add consideration if portfolio grows beyond $50k",
+      "BRK.B": "Great but too similar to a diversified large-cap blend — SCHD fills that role more efficiently",
+      "JEPI": "Lower yield than QQQI with similar NAV risk; QQQI preferred for income role",
+      "QQQ/VOO": "Prefer individual high-conviction names over index for this strategy's purpose",
+      "GLD": "IAU identical exposure at lower expense ratio",
+      "GDX": "Miners add operating leverage risk not needed — IAU simpler",
+      "FBTC": "IBIT (BlackRock) preferred for liquidity and brand trust",
+      "O": "REIT distributions are ordinary income (less tax-efficient); watchlist",
+      "STAG": "Same REIT tax issue; watchlist"
+    }
   },
   "holdings": [
     {
@@ -29,24 +64,137 @@
       "asset_class": "US Equity — Large Cap Growth",
       "sector": "Technology",
       "category": "Core Blue Chip",
-      "allocation_pct": 25,
-      "monthly_usd": { "at_500": 125, "at_750": 187.50, "at_1000": 250 },
+      "allocation_pct": 12,
+      "monthly_usd": { "at_500": 60, "at_750": 90, "at_1000": 120 },
       "analysis": {
         "moat": "Wide",
-        "moat_sources": ["Azure cloud lock-in", "Office 365 enterprise stickiness", "AI/Copilot monetization", "GitHub ecosystem", "Teams platform"],
+        "moat_sources": ["Azure cloud (#2 global, fastest growing)", "Office 365 / M365 enterprise lock-in", "AI Copilot monetization across 400M+ seats", "GitHub + developer ecosystem", "LinkedIn data moat", "Xbox/Game Pass"],
+        "piotroski_f_score": 8,
         "dividend_safety_score": 92,
         "dividend_consecutive_increases": 22,
-        "piotroski_f_score": 8,
+        "forward_pe_approx": "32x",
+        "revenue_cagr_3yr": "~15%",
+        "operating_margin": "~45%",
         "composite_score": 8.5,
+        "phase_scores": {
+          "business_quality": 9.0,
+          "valuation": 7.0,
+          "market_signals": 8.5,
+          "technical_timing": 8.5,
+          "risk_profile": 9.0
+        },
         "signal": "BULLISH",
         "confidence": "HIGH",
         "horizon": "LONG-TERM",
         "action": "BUY",
         "conviction": "STRONG",
-        "bull_case": "AI monetization via Copilot across 400M+ Office seats adds $10–20B incremental revenue by FY2028; Azure share gains from enterprise AI workloads.",
-        "bear_case": "Premium valuation (~32x forward P/E) leaves little margin of safety if AI monetization disappoints or antitrust action accelerates.",
-        "why_include": "Proven 50-year growth story that has reinvented itself multiple times. AI is the next chapter. Foundation of any long-term portfolio.",
+        "bull_case": "Copilot integration across all M365 products = $10–20B incremental revenue by FY2028; Azure gaining enterprise AI workloads from on-premise migration.",
+        "bear_case": "~32x forward P/E is premium — AI monetization timeline risk; FTC/antitrust scrutiny on Activision integration.",
+        "drip_recommended": true,
+        "note": "User's stated favorite. Cornerstone holding — highest confidence in 10-year compounding."
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "name": "NVIDIA Corporation",
+      "asset_class": "US Equity — Large Cap Growth",
+      "sector": "Technology — Semiconductors",
+      "category": "AI Trending Growth",
+      "allocation_pct": 10,
+      "monthly_usd": { "at_500": 50, "at_750": 75, "at_1000": 100 },
+      "analysis": {
+        "moat": "Wide",
+        "moat_sources": ["CUDA software ecosystem (10yr+ head start)", "H100/B200 Blackwell GPU dominance", "NVLink networking stack", "Data center platform lock-in", "NVIDIA AI Enterprise software"],
+        "piotroski_f_score": 9,
+        "dividend_safety_score": 55,
+        "forward_pe_approx": "35–40x",
+        "revenue_cagr_3yr": "~80%+ (data center)",
+        "gross_margin": "~74%",
+        "composite_score": 8.0,
+        "phase_scores": {
+          "business_quality": 9.5,
+          "valuation": 6.5,
+          "market_signals": 8.5,
+          "technical_timing": 8.0,
+          "risk_profile": 7.5
+        },
+        "signal": "BULLISH",
+        "confidence": "HIGH",
+        "horizon": "LONG-TERM",
+        "action": "BUY",
+        "conviction": "STRONG",
+        "bull_case": "AI model training + inference demand grows 5–10x over 5 years; NVIDIA is the only viable supplier at scale. Blackwell architecture extends the CUDA moat.",
+        "bear_case": "Valuation is richly priced; AMD/Intel closing gap; US export restrictions to China limit TAM; customer concentration (hyperscalers).",
+        "drip_recommended": true,
+        "note": "The defining AI infrastructure play. 10% allocation reflects high conviction but also elevated valuation risk."
+      }
+    },
+    {
+      "ticker": "AAPL",
+      "name": "Apple Inc.",
+      "asset_class": "US Equity — Large Cap Growth",
+      "sector": "Technology — Consumer Electronics",
+      "category": "Blue Chip Consumer Tech",
+      "allocation_pct": 8,
+      "monthly_usd": { "at_500": 40, "at_750": 60, "at_1000": 80 },
+      "analysis": {
+        "moat": "Wide",
+        "moat_sources": ["iOS ecosystem lock-in", "Services (App Store, Apple Pay, Apple TV+, iCloud)", "Brand premium and loyalty", "Supply chain mastery", "1.2B+ iPhone installed base"],
+        "piotroski_f_score": 8,
+        "dividend_safety_score": 88,
+        "dividend_consecutive_increases": 12,
+        "forward_pe_approx": "30x",
+        "services_revenue_growth": "~14% YoY",
+        "composite_score": 7.5,
+        "phase_scores": {
+          "business_quality": 9.0,
+          "valuation": 7.0,
+          "market_signals": 7.5,
+          "technical_timing": 7.0,
+          "risk_profile": 7.5
+        },
+        "signal": "BULLISH",
+        "confidence": "HIGH",
+        "horizon": "LONG-TERM",
+        "action": "BUY",
+        "conviction": "STRONG",
+        "bull_case": "Apple Intelligence (on-device AI) drives the most powerful iPhone upgrade cycle since 5G; Services revenue becoming majority of profits.",
+        "bear_case": "China revenue risk (~18% of revenue); App Store antitrust pressure; iPhone hardware plateauing as upgrade cycles lengthen.",
         "drip_recommended": true
+      }
+    },
+    {
+      "ticker": "AMZN",
+      "name": "Amazon.com Inc.",
+      "asset_class": "US Equity — Large Cap Growth",
+      "sector": "Consumer Discretionary / Cloud",
+      "category": "Cloud + E-Commerce Compounder",
+      "allocation_pct": 8,
+      "monthly_usd": { "at_500": 40, "at_750": 60, "at_1000": 80 },
+      "analysis": {
+        "moat": "Wide",
+        "moat_sources": ["AWS #1 cloud platform (33% market share)", "Prime ecosystem (200M+ subscribers)", "Fulfillment network (impossible to replicate)", "Advertising business ($50B+ revenue)", "Alexa AI platform"],
+        "piotroski_f_score": 8,
+        "dividend_safety_score": "N/A (no dividend)",
+        "forward_pe_approx": "38x",
+        "aws_operating_margin": "~37%",
+        "composite_score": 8.0,
+        "phase_scores": {
+          "business_quality": 9.0,
+          "valuation": 7.0,
+          "market_signals": 8.0,
+          "technical_timing": 8.0,
+          "risk_profile": 8.0
+        },
+        "signal": "BULLISH",
+        "confidence": "HIGH",
+        "horizon": "LONG-TERM",
+        "action": "BUY",
+        "conviction": "STRONG",
+        "bull_case": "AWS AI services (Bedrock, SageMaker) capturing enterprise AI workloads; advertising growing 20%+; Prime membership expansion globally.",
+        "bear_case": "AWS faces competition from MSFT Azure + GCP; regulatory/antitrust risk; retail business thin margins drag earnings.",
+        "drip_recommended": false,
+        "note": "No dividend but return via buybacks and growth. Consider enabling fractional share auto-invest."
       }
     },
     {
@@ -54,53 +202,172 @@
       "name": "Walmart Inc.",
       "asset_class": "US Equity — Large Cap Value",
       "sector": "Consumer Staples",
-      "category": "Defensive Core",
-      "allocation_pct": 15,
-      "monthly_usd": { "at_500": 75, "at_750": 112.50, "at_1000": 150 },
+      "category": "Defensive Dividend King",
+      "allocation_pct": 8,
+      "monthly_usd": { "at_500": 40, "at_750": 60, "at_1000": 80 },
       "analysis": {
         "moat": "Wide",
-        "moat_sources": ["Unmatched supply-chain scale", "Everyday low-price brand", "Walmart+ ecosystem", "Advertising business (Walmart Connect)", "International reach"],
+        "moat_sources": ["Unmatched supply-chain scale", "Walmart+ subscription ecosystem", "Advertising revenue (Walmart Connect)", "Private label brands", "International reach (Flipkart, Walmex)"],
+        "piotroski_f_score": 7,
         "dividend_safety_score": 95,
         "dividend_consecutive_increases": 51,
-        "dividend_status": "Dividend King (50+ consecutive increases)",
-        "piotroski_f_score": 7,
+        "dividend_status": "Dividend King",
+        "forward_pe_approx": "33x",
         "composite_score": 7.5,
+        "phase_scores": {
+          "business_quality": 8.5,
+          "valuation": 6.5,
+          "market_signals": 7.5,
+          "technical_timing": 7.5,
+          "risk_profile": 8.0
+        },
         "signal": "BULLISH",
         "confidence": "HIGH",
         "horizon": "LONG-TERM",
         "action": "BUY",
         "conviction": "STRONG",
-        "bull_case": "E-commerce + advertising revenue diversifying beyond low-margin grocery; Walmart+ subscriptions growing. Defensive in any recession.",
-        "bear_case": "Valuation at ~33x forward P/E is elevated for a retailer; tariff/trade headwinds could compress margins.",
-        "why_include": "Dividend King, recession-proof, holds value in downturns. Anchor for stability in any market condition.",
+        "bull_case": "Walmart+ + advertising = Apple-like services pivot for retail; recession-proof, budget shoppers increase in slowdowns.",
+        "bear_case": "Elevated P/E for a retailer; tariff headwinds on imported goods; Amazon competition relentless.",
         "drip_recommended": true
+      }
+    },
+    {
+      "ticker": "LLY",
+      "name": "Eli Lilly and Company",
+      "asset_class": "US Equity — Large Cap Growth",
+      "sector": "Healthcare — Pharmaceuticals",
+      "category": "Healthcare Innovation",
+      "allocation_pct": 7,
+      "monthly_usd": { "at_500": 35, "at_750": 52.5, "at_1000": 70 },
+      "analysis": {
+        "moat": "Wide",
+        "moat_sources": ["Mounjaro/Zepbound GLP-1 patent protection", "Manufacturing scale build-out", "Clinical pipeline depth (Alzheimer's, oncology)", "Brand trust and prescriber loyalty", "Tirzepatide first-in-class efficacy advantage"],
+        "piotroski_f_score": 7,
+        "dividend_safety_score": 75,
+        "forward_pe_approx": "45–50x",
+        "revenue_cagr_3yr": "~40%+",
+        "gwt_drug_market_estimate": "$100B+ by 2030",
+        "composite_score": 8.0,
+        "phase_scores": {
+          "business_quality": 9.0,
+          "valuation": 6.5,
+          "market_signals": 8.5,
+          "technical_timing": 7.5,
+          "risk_profile": 8.5
+        },
+        "signal": "BULLISH",
+        "confidence": "HIGH",
+        "horizon": "LONG-TERM",
+        "action": "BUY",
+        "conviction": "STRONG",
+        "bull_case": "GLP-1 obesity market is the largest drug category in history. Mounjaro + Zepbound are best-in-class with expanding indications (heart failure, sleep apnea, NASH). Pipeline is deep.",
+        "bear_case": "Premium valuation (45–50x) is pricing in perfection; biosimilar risk after 2030; manufacturing bottlenecks limiting supply.",
+        "drip_recommended": false,
+        "note": "One of the most compelling long-term healthcare growth stories since the human genome project era. DCA reduces entry price risk given premium valuation."
+      }
+    },
+    {
+      "ticker": "COST",
+      "name": "Costco Wholesale Corporation",
+      "asset_class": "US Equity — Large Cap Value/Growth",
+      "sector": "Consumer Staples",
+      "category": "Defensive Consumer Compounder",
+      "allocation_pct": 6,
+      "monthly_usd": { "at_500": 30, "at_750": 45, "at_1000": 60 },
+      "analysis": {
+        "moat": "Wide",
+        "moat_sources": ["93% member renewal rate", "Membership fee = near-pure profit", "Value brand (treasure hunt shopping)", "Private label (Kirkland) dominance", "International expansion runway"],
+        "piotroski_f_score": 8,
+        "dividend_safety_score": 90,
+        "dividend_consecutive_increases": 20,
+        "membership_renewal_rate": "93%",
+        "forward_pe_approx": "50x",
+        "composite_score": 7.5,
+        "phase_scores": {
+          "business_quality": 9.5,
+          "valuation": 6.0,
+          "market_signals": 7.5,
+          "technical_timing": 7.5,
+          "risk_profile": 8.5
+        },
+        "signal": "BULLISH",
+        "confidence": "HIGH",
+        "horizon": "LONG-TERM",
+        "action": "BUY",
+        "conviction": "STRONG",
+        "bull_case": "Counter-cyclical: budget-conscious consumers trade down to Costco in recessions. Membership fee price increase runway. International whitespace (Asia, Europe).",
+        "bear_case": "Richly valued at 50x forward P/E — requires perfect execution. E-commerce transition slower than peers.",
+        "drip_recommended": true,
+        "note": "Complementary to WMT — both recession-resilient but Costco focuses on the club/bulk format with a stickier membership moat."
       }
     },
     {
       "ticker": "QQQI",
       "name": "NEOS Nasdaq-100 High Income ETF",
-      "asset_class": "US Equity — Covered Call ETF",
+      "asset_class": "US Equity ETF — Covered Call",
       "sector": "Multi-Sector (NASDAQ-100 exposure)",
-      "category": "Income Generator",
-      "allocation_pct": 15,
-      "monthly_usd": { "at_500": 75, "at_750": 112.50, "at_1000": 150 },
+      "category": "Monthly Income Generator",
+      "allocation_pct": 8,
+      "monthly_usd": { "at_500": 40, "at_750": 60, "at_1000": 80 },
       "analysis": {
         "moat": "N/A (ETF)",
-        "strategy": "Sells index call options on NASDAQ-100 to generate premium income distributed monthly",
+        "strategy": "Writes index call options on NASDAQ-100 to generate monthly premium distributions",
         "distribution_yield_approx": "13–16% annually",
         "distribution_frequency": "Monthly",
+        "expense_ratio": "~0.68%",
         "composite_score": 6.5,
+        "phase_scores": {
+          "business_quality": 7.0,
+          "valuation": 7.0,
+          "market_signals": 6.5,
+          "technical_timing": 6.5,
+          "risk_profile": 5.5
+        },
         "signal": "BULLISH",
         "confidence": "MEDIUM",
         "horizon": "MEDIUM-TERM",
         "action": "BUY",
         "conviction": "MODERATE",
-        "bull_case": "High monthly income (13–16% yield) funds reinvestment or living expenses; tax-efficient option-premium treatment.",
-        "bear_case": "Capped upside vs. pure QQQ in a raging bull market; distributions may include return of capital during sideways/down markets leading to NAV erosion.",
-        "why_include": "Cash flow engine of the portfolio. Monthly distributions can be reinvested into other positions to accelerate compounding.",
-        "key_risks": ["NAV erosion in strong bull markets", "Return-of-capital distributions reduce cost basis", "Expense ratio higher than plain-vanilla ETFs"],
+        "bull_case": "13–16% annual yield paid monthly is the cash engine of the portfolio. Distributions reinvested into conviction names (MSFT, NVDA) supercharge compounding.",
+        "bear_case": "Caps upside vs. pure QQQ in a raging bull market; NAV erosion risk; distributions may include return of capital.",
+        "key_risks": ["NAV erosion in bull markets", "Return-of-capital reduces cost basis", "Higher expense ratio"],
         "drip_recommended": false,
-        "note": "Reinvest distributions manually into MSFT or WMT for compounding effect."
+        "note": "Do NOT DRIP. Reinvest distributions monthly into the most underweight position or highest-conviction name (MSFT/NVDA) for maximum compounding effect."
+      }
+    },
+    {
+      "ticker": "SCHD",
+      "name": "Schwab U.S. Dividend Equity ETF",
+      "asset_class": "US Equity ETF — Dividend Growth",
+      "sector": "Multi-Sector (Quality Dividend Payers)",
+      "category": "Dividend Growth Foundation",
+      "allocation_pct": 7,
+      "monthly_usd": { "at_500": 35, "at_750": 52.5, "at_1000": 70 },
+      "analysis": {
+        "moat": "N/A (ETF)",
+        "strategy": "Tracks quality US companies with consistent dividend payments and growth; screens for FCF/debt, ROE, dividend growth",
+        "distribution_yield_approx": "3.5–4.0%",
+        "distribution_frequency": "Quarterly",
+        "expense_ratio": "0.06%",
+        "dividend_growth_rate_5yr": "~11% CAGR",
+        "top_holdings_examples": ["Abbvie", "Chevron", "Home Depot", "Verizon", "Merck", "PepsiCo"],
+        "composite_score": 7.5,
+        "phase_scores": {
+          "business_quality": 8.5,
+          "valuation": 7.5,
+          "market_signals": 7.5,
+          "technical_timing": 7.0,
+          "risk_profile": 7.5
+        },
+        "signal": "BULLISH",
+        "confidence": "HIGH",
+        "horizon": "LONG-TERM",
+        "action": "BUY",
+        "conviction": "STRONG",
+        "bull_case": "Proven quality screen captures financially sound dividend growers. ~4% yield + 11% annual dividend growth = exceptional total return. Ultra-low 0.06% expense ratio.",
+        "bear_case": "Value/dividend factor underperforms in high-growth bull markets; sector tilts toward energy/financials.",
+        "drip_recommended": true,
+        "note": "The 'boring but beautiful' backbone. 5-year dividend growth of 11% CAGR means yield-on-cost grows significantly over time. Complements QQQI perfectly."
       }
     },
     {
@@ -108,175 +375,272 @@
       "name": "iShares Gold Trust (Physical Gold)",
       "asset_class": "Commodity — Precious Metal",
       "sector": "Hard Assets",
-      "category": "Inflation Hedge",
-      "allocation_pct": 15,
-      "monthly_usd": { "at_500": 75, "at_750": 112.50, "at_1000": 150 },
+      "category": "Inflation Hedge — Safe Haven",
+      "allocation_pct": 8,
+      "monthly_usd": { "at_500": 40, "at_750": 60, "at_1000": 80 },
       "analysis": {
         "moat": "N/A (commodity)",
-        "drivers": ["Central bank buying (record levels)", "De-dollarization trend", "Geopolitical uncertainty", "Inflation/stagflation hedge", "All-time high momentum"],
+        "drivers": ["Record central bank buying (2022–2026 multi-year trend)", "De-dollarization / BRICS reserve diversification", "Persistent geopolitical tension", "Real rate sensitivity", "Inflation hedge narrative"],
+        "expense_ratio": "0.25%",
+        "backed_by": "Physical gold held in JP Morgan vaults",
         "composite_score": 7.5,
+        "phase_scores": {
+          "business_quality": 8.0,
+          "valuation": 7.5,
+          "market_signals": 8.0,
+          "technical_timing": 7.0,
+          "risk_profile": 7.5
+        },
         "signal": "BULLISH",
         "confidence": "HIGH",
         "horizon": "LONG-TERM",
         "action": "BUY",
         "conviction": "STRONG",
-        "bull_case": "Record central bank demand, persistent inflation, and dollar diversification drives gold structurally higher. Safe haven in any crisis.",
-        "bear_case": "Risk-off rally reversal if Fed pivots hawkish; gold pays no yield, opportunity cost rises with rates.",
-        "why_include": "Gold has protected wealth for thousands of years. Portfolio insurance and inflation hedge. Non-correlated to equities.",
-        "alternatives": ["GLD (larger fund, slightly higher expense)", "PHYS (physical redemption option)", "SGOL (Swiss vaulted)"],
+        "bull_case": "Structural central bank demand + de-dollarization = gold in a multi-year secular bull market. Portfolio insurance with zero counterparty risk.",
+        "bear_case": "No yield — opportunity cost vs. bonds when real rates rise; speculative positioning could unwind.",
         "drip_recommended": false
       }
     },
     {
       "ticker": "IBIT",
       "name": "iShares Bitcoin Trust ETF (BlackRock)",
-      "asset_class": "Digital Asset — Cryptocurrency ETF",
+      "asset_class": "Digital Asset ETF",
       "sector": "Alternative Assets",
-      "category": "Trending / High-Growth",
-      "allocation_pct": 12,
-      "monthly_usd": { "at_500": 60, "at_750": 90, "at_1000": 120 },
+      "category": "Trending Digital Asset",
+      "allocation_pct": 7,
+      "monthly_usd": { "at_500": 35, "at_750": 52.5, "at_1000": 70 },
       "analysis": {
         "moat": "N/A (commodity-like asset)",
-        "drivers": ["Institutional adoption (ETF approval Jan 2024)", "Bitcoin halving cycle (April 2024)", "Fixed supply (21M BTC)", "Digital store of value narrative", "Macro hedge properties"],
+        "drivers": ["Spot Bitcoin ETF approval (Jan 2024) — institutional floodgates opened", "Bitcoin halving (April 2024) — supply shock", "Fixed 21M BTC supply", "Sovereign wealth fund adoption", "Store of value / digital gold narrative"],
+        "expense_ratio": "0.12% (lowest in class)",
+        "aum": "Largest Bitcoin ETF globally (BlackRock)",
         "composite_score": 6.0,
+        "phase_scores": {
+          "business_quality": 5.5,
+          "valuation": 6.0,
+          "market_signals": 6.5,
+          "technical_timing": 6.0,
+          "risk_profile": 6.0
+        },
         "signal": "BULLISH",
         "confidence": "MEDIUM",
         "horizon": "LONG-TERM",
         "action": "BUY",
         "conviction": "MODERATE",
-        "bull_case": "Post-halving supply shock, institutional ETF demand, and sovereign adoption create structural price appreciation over multi-year horizon.",
-        "bear_case": "High volatility (50–80% drawdowns have occurred); regulatory crackdowns; competitor cryptos; speculative/no cash flows.",
-        "why_include": "Small strategic allocation (12%) captures upside of the leading digital asset with limited portfolio downside exposure. IBIT is the most liquid, lowest-risk vehicle.",
-        "alternatives": ["FBTC (Fidelity Bitcoin ETF)", "GBTC (Grayscale, higher fees)", "Direct Bitcoin (Coinbase/Kraken)"],
-        "position_sizing_note": "12% max. Do NOT increase beyond 15% given high volatility. DCA monthly regardless of price.",
-        "drip_recommended": false
+        "bull_case": "Post-halving supply shock + ETF institutional demand + potential sovereign adoption creates a multi-year structural appreciation case.",
+        "bear_case": "50–80% drawdowns are historically normal; regulatory risk; no fundamental cash flows; speculative dynamics.",
+        "position_cap": "Do not exceed 10% of total portfolio",
+        "drip_recommended": false,
+        "note": "Reduced from prior 12% to 7% — Bitcoin remains speculative. IBIT is the cleanest, safest vehicle (BlackRock, lowest fees, most liquid)."
       }
     },
     {
       "ticker": "UNH",
       "name": "UnitedHealth Group Inc.",
       "asset_class": "US Equity — Large Cap Value",
-      "sector": "Healthcare",
-      "category": "Recovery Play / Core Healthcare",
-      "allocation_pct": 10,
-      "monthly_usd": { "at_500": 50, "at_750": 75, "at_1000": 100 },
+      "sector": "Healthcare — Managed Care",
+      "category": "Healthcare Recovery Play",
+      "allocation_pct": 6,
+      "monthly_usd": { "at_500": 30, "at_750": 45, "at_1000": 60 },
       "analysis": {
         "moat": "Wide",
-        "moat_sources": ["Optum Health vertical integration", "UnitedHealthcare scale (50M+ members)", "Data/analytics advantages", "Switching costs for employers", "Pharmacy benefit management"],
+        "moat_sources": ["Optum Health vertical integration (pharmacy + care delivery)", "50M+ member scale advantages", "Data analytics via Optum Insight", "Employer switching costs", "Government program infrastructure"],
+        "piotroski_f_score": 7,
+        "dividend_safety_score": 78,
+        "forward_pe_approx": "17–22x (depressed)",
         "composite_score": 5.5,
+        "phase_scores": {
+          "business_quality": 8.0,
+          "valuation": 6.5,
+          "market_signals": 4.5,
+          "technical_timing": 4.5,
+          "risk_profile": 4.0
+        },
         "signal": "NEUTRAL",
         "confidence": "MEDIUM",
         "horizon": "MEDIUM-TERM",
         "action": "ACCUMULATE ON WEAKNESS",
         "conviction": "MODERATE",
-        "bull_case": "If DOJ investigation resolves favorably and Medicare Advantage reimbursements stabilize, UNH returns to historical premium valuation. Optum is a high-growth asset within the company.",
-        "bear_case": "Regulatory/DOJ overhang, Congress scrutiny on prior authorization, Medicare Advantage reimbursement pressure, and sentiment damage from CEO incident.",
-        "why_include": "Largest US health insurer with wide moat. Current headwinds create a value entry point. Healthcare is non-cyclical — people always need insurance.",
-        "key_risks": ["DOJ investigation outcome", "Medicare Advantage rate reductions", "Political risk around health insurance industry", "Earnings estimate uncertainty"],
-        "position_sizing_note": "Reduced 10% allocation vs. peers reflects elevated near-term risk. DCA steadily — do NOT buy all at once. Monitor DOJ headlines.",
+        "bull_case": "DOJ investigation resolves; Medicare Advantage reimbursements stabilize; Optum grows independently. Wide moat at depressed P/E = value entry point.",
+        "bear_case": "Regulatory overhang, DOJ forced breakup risk, congressional scrutiny, CEO transition uncertainty, MA margin compression.",
+        "monitoring_flags": ["DOJ investigation updates", "Q-earnings MA medical cost ratio", "Congressional health insurance reform bills"],
+        "upgrade_trigger": "Increase to 10% if DOJ investigation closes favorably + two consecutive quarters of MA margin stabilization.",
         "drip_recommended": false,
-        "review_trigger": "Increase to 15% if DOJ investigation resolves or MA reimbursements stabilize."
+        "note": "Reduced to 6% given elevated uncertainty. Wide moat still intact — thesis is 'wide moat at a discount.' DCA steadily rather than lump-sum."
       }
     },
     {
       "ticker": "SLV",
       "name": "iShares Silver Trust",
       "asset_class": "Commodity — Precious Metal",
-      "sector": "Hard Assets",
-      "category": "Inflation Hedge / Industrial Growth",
-      "allocation_pct": 8,
-      "monthly_usd": { "at_500": 40, "at_750": 60, "at_1000": 80 },
+      "sector": "Hard Assets / Industrial",
+      "category": "Inflation Hedge — Industrial Growth",
+      "allocation_pct": 5,
+      "monthly_usd": { "at_500": 25, "at_750": 37.5, "at_1000": 50 },
       "analysis": {
         "moat": "N/A (commodity)",
-        "drivers": ["Solar panel demand (primary industrial use)", "EV battery applications", "5G infrastructure buildout", "Monetary demand (historically undervalued vs. gold)", "Gold/Silver ratio historically elevated"],
+        "drivers": ["Solar panel demand (2oz silver per panel, ~200GW/yr installs)", "EV battery and charging infrastructure", "5G infrastructure buildout", "Historically elevated Gold/Silver ratio (mean reversion potential)", "Monetary hedge in inflation scenarios"],
+        "expense_ratio": "0.50%",
+        "industrial_use_pct": "~57% of total silver demand",
         "composite_score": 7.0,
+        "phase_scores": {
+          "business_quality": 7.5,
+          "valuation": 7.0,
+          "market_signals": 7.0,
+          "technical_timing": 7.0,
+          "risk_profile": 6.5
+        },
         "signal": "BULLISH",
         "confidence": "MEDIUM",
         "horizon": "LONG-TERM",
         "action": "BUY",
         "conviction": "MODERATE",
-        "bull_case": "Dual demand (industrial + monetary) is uniquely strong. Solar installations require ~100oz silver per panel; clean energy buildout = structural demand. Gold/Silver ratio reversion historically adds 30–50% outperformance.",
-        "bear_case": "More volatile than gold (2x typical); industrial demand drops in recession; smaller market = larger price swings.",
-        "why_include": "Smaller position complements gold. Silver has more industrial exposure and higher upside potential if clean-energy demand accelerates.",
-        "alternatives": ["PSLV (physical silver, Premium Trust)", "SIL (silver miners ETF — higher risk/reward)"],
+        "bull_case": "Clean energy buildout creates structural industrial silver demand. Gold/Silver ratio at historic highs suggests silver is undervalued relative to gold. Mean reversion could deliver 30–50% outperformance.",
+        "bear_case": "More volatile than gold (2x typical); industrial demand drops in recession; smaller market = more volatile price action.",
         "drip_recommended": false
       }
     }
   ],
   "allocation_summary": {
+    "by_position": {
+      "MSFT": "12%",
+      "NVDA": "10%",
+      "AAPL": "8%",
+      "AMZN": "8%",
+      "WMT": "8%",
+      "QQQI": "8%",
+      "IAU": "8%",
+      "LLY": "7%",
+      "SCHD": "7%",
+      "IBIT": "7%",
+      "COST": "6%",
+      "UNH": "6%",
+      "SLV": "5%"
+    },
     "by_category": {
-      "Core Blue Chip": "25%",
-      "Defensive Core": "15%",
-      "Income Generator": "15%",
-      "Inflation Hedge (Gold)": "15%",
-      "Trending / High-Growth (Bitcoin)": "12%",
-      "Recovery Play / Healthcare": "10%",
-      "Inflation Hedge (Silver)": "8%"
+      "Blue Chip Tech (MSFT+AAPL)": "20%",
+      "AI Infrastructure (NVDA)": "10%",
+      "Cloud+E-Commerce (AMZN)": "8%",
+      "Defensive Consumer (WMT+COST)": "14%",
+      "Healthcare Innovation (LLY+UNH)": "13%",
+      "Income ETF (QQQI)": "8%",
+      "Dividend Growth ETF (SCHD)": "7%",
+      "Precious Metals (IAU+SLV)": "13%",
+      "Digital Assets (IBIT)": "7%"
     },
     "by_asset_class": {
-      "US Equities": "50%",
-      "Equity ETF (Covered Call)": "15%",
-      "Commodities (Gold + Silver)": "23%",
-      "Digital Assets (Bitcoin ETF)": "12%"
+      "US Individual Equities": "69%",
+      "ETFs (Equity/Income/Dividend)": "15%",
+      "Commodities (Gold+Silver)": "13%",
+      "Digital Assets": "7%"
+    },
+    "by_sector": {
+      "Technology": "30%",
+      "Consumer Staples/Discretionary": "22%",
+      "Healthcare": "13%",
+      "Multi-Sector ETFs": "15%",
+      "Hard Assets / Digital": "20%"
     },
     "risk_distribution": {
-      "Low Risk (WMT, Gold)": "30%",
-      "Moderate Risk (MSFT, QQQI, Silver)": "48%",
-      "Higher Risk (Bitcoin, UNH)": "22%"
+      "Low Risk (WMT, COST, SCHD, IAU)": "29%",
+      "Moderate Risk (MSFT, AAPL, AMZN, QQQI, SLV)": "41%",
+      "Growth Risk (NVDA, LLY)": "17%",
+      "Higher Risk (IBIT, UNH)": "13%"
     }
   },
   "auto_invest_schedule": {
     "frequency": "Monthly",
-    "suggested_day": "1st or 15th of each month",
-    "method": "Dollar-cost averaging (DCA) — buy regardless of price",
+    "suggested_day": "1st of each month (or 15th as backup)",
+    "method": "Dollar-cost averaging (DCA) — buy every month regardless of price action",
     "broker_recommendations": [
-      "Fidelity (fractional shares, no commissions, automatic investing)",
-      "Schwab (fractional shares via Stock Slices)",
-      "M1 Finance (automated pie-based investing — ideal for this strategy)"
+      {
+        "name": "M1 Finance",
+        "rating": "Best for this strategy",
+        "why": "Create a 13-slice 'Pie' with exact percentages. Recurring transfers auto-invest at target weights. Fractional shares supported."
+      },
+      {
+        "name": "Fidelity",
+        "rating": "Excellent alternative",
+        "why": "Fractional shares, automatic investing feature, zero commissions, DRIP support, no account minimums."
+      },
+      {
+        "name": "Schwab",
+        "rating": "Good option",
+        "why": "Stock Slices for fractional shares; set up recurring buys manually. Schwab is also SCHD's own brokerage."
+      }
     ],
     "drip_settings": {
-      "MSFT": "Enable DRIP",
-      "WMT": "Enable DRIP",
-      "QQQI": "Disable DRIP — reinvest distributions manually into MSFT or WMT",
+      "MSFT": "ENABLE DRIP",
+      "NVDA": "ENABLE DRIP",
+      "AAPL": "ENABLE DRIP",
+      "AMZN": "N/A (no dividend)",
+      "WMT": "ENABLE DRIP",
+      "LLY": "ENABLE DRIP (small dividend)",
+      "COST": "ENABLE DRIP",
+      "QQQI": "DISABLE — reinvest distributions manually into MSFT or NVDA (most underweight)",
+      "SCHD": "ENABLE DRIP",
       "IAU": "N/A",
       "IBIT": "N/A",
-      "UNH": "Disable DRIP until DOJ overhang clears",
+      "UNH": "DISABLE until regulatory overhang clears",
       "SLV": "N/A"
     }
   },
   "rebalancing_rules": {
-    "threshold": "Rebalance any position that drifts more than +/- 5% from target weight",
-    "frequency": "Review quarterly; rebalance if threshold breached",
-    "tax_note": "Use new monthly contributions to rebalance (buy underweight positions) before selling to avoid taxable events",
-    "annual_review": "Full strategy review each January — reassess UNH regulatory risk, Bitcoin allocation, and macro environment"
+    "threshold": "Rebalance any position drifting more than ±5% from target weight",
+    "frequency": "Review quarterly; rebalance if any breach detected",
+    "method": "Buy underweight positions with new contributions first — avoid selling to prevent taxable events",
+    "bitcoin_cap": "Never let IBIT exceed 10% of total portfolio",
+    "msft_nvda_combined_cap": "If MSFT+NVDA combined exceeds 30%, reduce new contribution to those two",
+    "annual_review": "Full strategy review every January — reassess UNH regulatory status, macro environment for gold/silver, and identify new candidates above 7.5/10 composite score"
   },
-  "risk_management": {
-    "max_single_position": "25% (MSFT — justified by wide moat, reduce if exceeds 30%)",
-    "stop_loss_philosophy": "No hard stop-losses for core DCA strategy — volatility is expected. Only exit if investment thesis breaks.",
-    "thesis_break_conditions": {
-      "MSFT": "Azure loses significant cloud market share OR AI monetization fails over 3 years",
-      "WMT": "Sustained market share loss to Amazon/Target OR dividend cut",
-      "QQQI": "Persistent NAV decline > 20% over 12 months with no recovery",
-      "IAU": "Structural deflationary environment + rising real yields sustained > 24 months",
-      "IBIT": "Bitcoin ETF regulatory ban OR Bitcoin loses 90%+ and fundamentals collapse",
-      "UNH": "DOJ forces structural breakup OR Medicare Advantage business is banned",
-      "SLV": "Structural substitution eliminates industrial silver demand"
+  "risk_scenarios": {
+    "bear_market_minus_30pct": {
+      "estimated_portfolio_drawdown": "22–27%",
+      "why_cushioned": "WMT, COST, SCHD, IAU, SLV provide ballast. Gold typically appreciates in equity bear markets. DCA accelerates recovery.",
+      "months_to_recover_with_dca": "18–30 months"
+    },
+    "inflation_surge": {
+      "portfolio_response": "IAU + SLV (13%) + IBIT (digital gold narrative) = 20% hard-asset exposure. COST and WMT can pass price increases.",
+      "most_at_risk": "QQQI (NAV inflation), SCHD (fixed income sensitivity)"
+    },
+    "ai_bubble_burst": {
+      "portfolio_response": "MSFT + NVDA + AAPL + AMZN combined = 38%. A 50% correction in those would cause ~19% portfolio drawdown — painful but not catastrophic.",
+      "defense": "WMT, COST, SCHD, gold provide counter-cyclical protection"
+    },
+    "recession": {
+      "portfolio_response": "WMT, COST (counter-cyclical), SCHD (quality dividend payers), IAU (safe haven) total 35% defensive exposure.",
+      "most_at_risk": "LLY (high P/E multiple compression), NVDA (enterprise capex cuts)"
     }
+  },
+  "thesis_break_exit_conditions": {
+    "MSFT": "Azure loses significant cloud market share to AWS/GCP OR AI Copilot monetization fails after 3 years",
+    "NVDA": "AMD achieves GPU parity + CUDA alternative gains widespread adoption OR China export bans eliminate >30% of revenue permanently",
+    "AAPL": "Structural iPhone market share collapse OR forced App Store breakup eliminates services revenue",
+    "AMZN": "AWS loses #1 cloud position AND retail market share collapses simultaneously",
+    "WMT": "Dividend cut OR sustained market share loss to AMZN + Target combined",
+    "LLY": "FDA withdraws GLP-1 drugs for safety concerns OR biosimilar competition eliminated pricing power before 2030",
+    "COST": "Membership renewal rate falls below 88% for two consecutive years",
+    "QQQI": "NAV declines persistently > 25% over 18 months with no recovery",
+    "SCHD": "Fund methodology change eliminates quality screen; expense ratio increase",
+    "IAU": "30+ year deflationary environment (Japan-style) + sustained positive real rates",
+    "IBIT": "US government bans Bitcoin ETFs OR Bitcoin price falls >90% from peak and stays there 3+ years",
+    "UNH": "DOJ forces structural company breakup OR Congress bans Medicare Advantage business model",
+    "SLV": "Silver demand structurally replaced by alternative materials in solar/electronics"
   },
   "performance_tracking": {
-    "benchmark": "60% SPY / 40% QQQ blended",
-    "metrics_to_track": [
-      "Total portfolio value (monthly)",
-      "Monthly income received (QQQI distributions + MSFT/WMT dividends)",
-      "Cost basis per position",
-      "Annualized return vs. benchmark",
-      "Portfolio yield on cost"
-    ],
+    "benchmark": "60% VOO / 40% QQQ blended index",
+    "income_target": {
+      "at_500_monthly_contrib_year1": "~$30–50/month (QQQI distributions + MSFT/WMT/SCHD dividends)",
+      "at_750_monthly_contrib_year1": "~$45–75/month",
+      "at_1000_monthly_contrib_year1": "~$60–100/month",
+      "note": "Income grows each year as more shares are accumulated"
+    },
     "review_calendar": {
-      "monthly": "Log contributions and current values",
-      "quarterly": "Check allocation drift, run /portfolio-review skill",
-      "annually": "Full rebalance review, tax-loss harvesting assessment, strategy reassessment"
+      "monthly": "Log contributions, current values, dividends/distributions received",
+      "quarterly": "Check allocation drift — run /portfolio-review with InvestSkill plugin",
+      "semi_annual": "Run /research-bundle on any new watchlist candidates (score threshold: 7.5+)",
+      "annually": "Full rebalance, tax-loss harvest review, strategy re-evaluation"
     }
   },
-  "disclaimer": "This strategy is educational and not financial advice. Past performance does not guarantee future results. Consult a licensed financial advisor before making investment decisions. All investments carry risk including possible loss of principal."
+  "disclaimer": "This strategy is for educational purposes only and is not financial advice. All investments involve risk including possible loss of principal. Past performance does not guarantee future results. This analysis was generated using the InvestSkill us-stock-analysis plugin (v1.6.0) applying its multi-dimensional research methodology. Consult a licensed financial advisor before making investment decisions."
 }
